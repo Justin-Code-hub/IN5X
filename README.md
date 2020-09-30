@@ -1,2 +1,1 @@
-# IN5X
-IN5X Project
+# Projet IN5X : Pixel Art

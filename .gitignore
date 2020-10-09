@@ -1,0 +1,13 @@
+# Fichiers non utiles
+.txt
+.csv
+.xslx
+
+# Images
+.bmp
+.png
+.jpeg
+.jpg
+
+# Fichiers de test
+*test*

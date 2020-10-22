@@ -14,37 +14,26 @@ import sys
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+
+        # -- Main Window --
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1014, 822)
         MainWindow.setAutoFillBackground(True)
+
+        # -- central widget --
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
+        # -- horizontalLayout --
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(-1, -1, 801, 551))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.label_2 = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        font = QtGui.QFont()
-        font.setBold(True)
-        font.setItalic(False)
-        font.setWeight(75)
-        font.setKerning(True)
-        self.label_2.setFont(font)
-        self.label_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_2.setObjectName("label_2")
-        self.horizontalLayout.addWidget(self.label_2)
-        self.label = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        font = QtGui.QFont()
-        font.setBold(True)
-        font.setItalic(False)
-        font.setWeight(75)
-        font.setKerning(True)
-        self.label.setFont(font)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName("label")
-        self.horizontalLayout.addWidget(self.label)
+
+        self.setupLabelImageUi(MainWindow)
+        
         self.horizontalLayoutWidget_4 = QtWidgets.QWidget(self.centralwidget)
         self.horizontalLayoutWidget_4.setGeometry(QtCore.QRect(-1, 569, 1001, 201))
         self.horizontalLayoutWidget_4.setObjectName("horizontalLayoutWidget_4")
@@ -53,24 +42,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setSpacing(30)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
 
-        self.pushButton_2 = QtWidgets.QPushButton(self.horizontalLayoutWidget_4)
-        self.pushButton_2.setMinimumSize(QtCore.QSize(0, 70))
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.pushButton_2.clicked.connect(self.openImage)
-
-
-
-        self.horizontalLayout_4.addWidget(self.pushButton_2)
-
-        self.pushButton_3 = QtWidgets.QPushButton(self.horizontalLayoutWidget_4)
-        self.pushButton_3.setMinimumSize(QtCore.QSize(0, 70))
-        self.pushButton_3.setObjectName("pushButton_3")
-
-        self.horizontalLayout_4.addWidget(self.pushButton_3)
-        self.pushButton = QtWidgets.QPushButton(self.horizontalLayoutWidget_4)
-        self.pushButton.setMinimumSize(QtCore.QSize(0, 70))
-        self.pushButton.setObjectName("pushButton")
-        self.horizontalLayout_4.addWidget(self.pushButton)
+        self.setupButtonUi(MainWindow)
+        
         self.toolBox = QtWidgets.QToolBox(self.centralwidget)
         self.toolBox.setGeometry(QtCore.QRect(810, 20, 191, 531))
         self.toolBox.setObjectName("toolBox")
@@ -82,7 +55,66 @@ class Ui_MainWindow(object):
         self.Textures_Page.setGeometry(QtCore.QRect(0, 0, 191, 479))
         self.Textures_Page.setObjectName("Textures_Page")
         self.toolBox.addItem(self.Textures_Page, "")
+
         MainWindow.setCentralWidget(self.centralwidget)
+
+        self.setupMenuBar(MainWindow)
+
+        self.retranslateUi(MainWindow)
+
+        self.toolBox.setCurrentIndex(1)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+
+    # ---- Setup Ui Fonction ----
+    def setupLabelImageUi(self, MainWindow):
+        # --  --
+        self.label_image_original = QtWidgets.QLabel(self.horizontalLayoutWidget)
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setItalic(False)
+        font.setWeight(75)
+        font.setKerning(True)
+        self.label_image_original.setFont(font)
+        self.label_image_original.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_image_original.setObjectName("label_image_original")
+        self.horizontalLayout.addWidget(self.label_image_original)
+
+
+        self.label_image_pixel = QtWidgets.QLabel(self.horizontalLayoutWidget)
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setItalic(False)
+        font.setWeight(75)
+        font.setKerning(True)
+        self.label_image_pixel.setFont(font)
+        self.label_image_pixel.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_image_pixel.setObjectName("label_image_pixel")
+        self.horizontalLayout.addWidget(self.label_image_pixel)
+
+
+    def setupButtonUi(self, MainWindow):
+        # --  --
+        self.pushButton_ouvrir = QtWidgets.QPushButton(self.horizontalLayoutWidget_4)
+        self.pushButton_ouvrir.setMinimumSize(QtCore.QSize(0, 70))
+        self.pushButton_ouvrir.setObjectName("pushButton_ouvrir")
+        self.pushButton_ouvrir.clicked.connect(self.openImage)
+        self.horizontalLayout_4.addWidget(self.pushButton_ouvrir)
+
+        # --  --
+        self.pushButton_generer = QtWidgets.QPushButton(self.horizontalLayoutWidget_4)
+        self.pushButton_generer.setMinimumSize(QtCore.QSize(0, 70))
+        self.pushButton_generer.setObjectName("pushButton_generer")
+        self.horizontalLayout_4.addWidget(self.pushButton_generer)
+
+        # --  --
+        self.pushButton_exporter = QtWidgets.QPushButton(self.horizontalLayoutWidget_4)
+        self.pushButton_exporter.setMinimumSize(QtCore.QSize(0, 70))
+        self.pushButton_exporter.setObjectName("pushButton_exporter")
+        self.horizontalLayout_4.addWidget(self.pushButton_exporter)
+
+
+    def setupMenuBar(self, MainWindow):
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1014, 21))
         self.menubar.setObjectName("menubar")
@@ -125,22 +157,16 @@ class Ui_MainWindow(object):
         self.menuFichier.addAction(self.actionQuitter)
         self.menubar.addAction(self.menuFichier.menuAction())
 
-        self.retranslateUi(MainWindow)
-        self.toolBox.setCurrentIndex(1)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-       
-
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label_2.setText(_translate("MainWindow", "ImageOriginals"))
-        self.label.setText(_translate("MainWindow", "ImagePixelise"))
+        self.label_image_original.setText(_translate("MainWindow", "ImageOriginals"))
+        self.label_image_pixel.setText(_translate("MainWindow", "ImagePixelise"))
 
-        self.pushButton_2.setText(_translate("MainWindow", "Ouvir"))
-        self.pushButton_3.setText(_translate("MainWindow", "Générer"))
-        self.pushButton.setText(_translate("MainWindow", "Exporter"))
+        self.pushButton_ouvrir.setText(_translate("MainWindow", "Ouvir"))
+        self.pushButton_generer.setText(_translate("MainWindow", "Générer"))
+        self.pushButton_exporter.setText(_translate("MainWindow", "Exporter"))
 
         self.toolBox.setItemText(self.toolBox.indexOf(self.Parametres_Page), _translate("MainWindow", "Parametres"))
         self.toolBox.setItemText(self.toolBox.indexOf(self.Textures_Page), _translate("MainWindow", "Textures"))
@@ -156,11 +182,13 @@ class Ui_MainWindow(object):
         self.actionQuitter.setText(_translate("MainWindow", "Quitter"))
 
 
+    # ---- Action Fonction ----
+
     def openImage(self):
         fname = QFileDialog.getOpenFileName()
         print(fname)
-        self.label_2.setPixmap(QtGui.QPixmap(fname[0]))
-        self.label_2.setScaledContents(True)
+        self.label_image_original.setPixmap(QtGui.QPixmap(fname[0]))
+        self.label_image_original.setScaledContents(True)
 
 
 

@@ -9,7 +9,7 @@
 
 from PyQt5 import *
 
-from PyQt5 import QtWidgets , QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 
 from PyQt5.QtCore import * 
@@ -115,6 +115,8 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        
+
 
 
     # ---- Setup Ui Fonction ----
@@ -142,6 +144,9 @@ class Ui_MainWindow(object):
         self.label_image_pixel.setAlignment(QtCore.Qt.AlignCenter)
         self.label_image_pixel.setObjectName("label_image_pixel")
         self.ImageLayout.addWidget(self.label_image_pixel)
+        
+        print(self.label_image_pixel.size())
+        #print(self.label_image_original.size())
 
 
     def setupButtonUi(self, MainWindow):
@@ -149,6 +154,7 @@ class Ui_MainWindow(object):
         self.pushButton_ouvrir = QtWidgets.QPushButton(self.ButtonLayoutWidget)
         self.pushButton_ouvrir.setMinimumSize(QtCore.QSize(0, 70))
         self.pushButton_ouvrir.setObjectName("pushButton_ouvrir")
+        
         self.pushButton_ouvrir.clicked.connect(self.openImage)
         self.ButtonLayout.addWidget(self.pushButton_ouvrir)
 
@@ -156,6 +162,9 @@ class Ui_MainWindow(object):
         self.pushButton_generer = QtWidgets.QPushButton(self.ButtonLayoutWidget)
         self.pushButton_generer.setMinimumSize(QtCore.QSize(0, 70))
         self.pushButton_generer.setObjectName("pushButton_generer")
+		
+        self.pushButton_generer.clicked.connect(self.generateImage)
+        
         self.ButtonLayout.addWidget(self.pushButton_generer)
 
         # --  --
@@ -242,6 +251,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label_image_original.setText(_translate("MainWindow", "ImageOriginals"))
         self.label_image_pixel.setText(_translate("MainWindow", "ImagePixelise"))
+        #print(self.label_image_pixel.size())
 
         self.pushButton_ouvrir.setText(_translate("MainWindow", "Ouvir"))
         self.pushButton_generer.setText(_translate("MainWindow", "Générer"))
@@ -262,10 +272,33 @@ class Ui_MainWindow(object):
     # ---- Action Fonction ----
 
     def openImage(self):
+    	
         fname = QFileDialog.getOpenFileName()
         print(fname)
+        print(self.label_image_original.size())
+        
         self.label_image_original.setPixmap(QtGui.QPixmap(fname[0]))
-        self.label_image_original.setScaledContents(True)
+        self.label_image_original.setMinimumSize(1,1)
+        self.label_image_original.setPixmap(QtGui.QPixmap(fname[0]).scaled(self.label_image_pixel.size(),QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
+        #---
+        image = QtGui.QImage(fname[0])
+        self.saveTemp(image)
+       
+
+# Code de Lucien permet d'afficher l'image "temp.png" qu'on updatera en faite a chaque opération sur l'image
+    def generateImage(self):
+        print(self.label_image_pixel.size())
+        pixmap = QtGui.QPixmap("File/temp.png")
+        self.label_image_pixel.setPixmap(pixmap)
+        self.label_image_pixel.setMinimumSize(1,1)
+        self.label_image_pixel.setPixmap(pixmap.scaled(self.label_image_pixel.size(),QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
+        #self.label_image_pixel.setScaledContents(True)
+        
+#-----------------------------------------
+    def saveTemp(self,image):
+    	image.save("File/temp.png")
+
+
 
 
 

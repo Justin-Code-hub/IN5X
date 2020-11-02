@@ -42,6 +42,7 @@ class ExpandWidget(QtWidgets.QWidget) :
         self.Body = QtWidgets.QWidget(self)
         self.Body.setGeometry(0, 25, 330, 400)
         self.Body.hide()
+        self.setMinimumSize(330, 25)
 
         #QtCore.QObject.connect(self.Header, SIGNAL(headerClicked(bool)),self,SLOT(hideBody(bool)))
 
@@ -93,30 +94,7 @@ class Ui_MainWindow(object):
 
         self.setupLabelImageUi(MainWindow)
         # ---
-
-
-
-        ######
-
-        # -- ToolBar Layout --
-        self.ToolBarLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.ToolBarLayoutWidget.setGeometry(QtCore.QRect(820, -1, 500, 551))
-        self.ToolBarLayoutWidget.setObjectName("ToolBarLayoutWidget")
-        self.ToolBarLayout = QtWidgets.QVBoxLayout(self.ToolBarLayoutWidget)
-        self.ToolBarLayout.setContentsMargins(0, 0, 0, 0)
-        self.ToolBarLayout.setObjectName("ToolBarLayout")
-        self.ToolBarLayout.setAlignment(QtCore.Qt.AlignTop)
-
-
-        self.testNewWidget = ExpandWidget()
-        self.testNewWidget2 = ExpandWidget()
-        self.testNewWidget3 = ExpandWidget()
-        self.ToolBarLayout.addWidget(self.testNewWidget)
-        self.ToolBarLayout.addWidget(self.testNewWidget2)
-        self.ToolBarLayout.addWidget(self.testNewWidget3)
-
-        ######
-        
+        self.setupToolBarUi(MainWindow)
 
         # Button Layout
         self.ButtonLayoutWidget = QtWidgets.QWidget(self.centralwidget)
@@ -229,6 +207,34 @@ class Ui_MainWindow(object):
         self.menuFichier.addSeparator()
         self.menuFichier.addAction(self.actionQuitter)
         self.menubar.addAction(self.menuFichier.menuAction())
+
+    def setupToolBarUi(self, MainWindow):
+        # -- ToolBar Layout --
+        self.scroll = QtWidgets.QScrollArea(self.centralwidget)
+        self.ToolBarLayoutWidget = QtWidgets.QWidget()
+        self.ToolBarLayout = QtWidgets.QVBoxLayout()
+
+        self.scroll.setWidget(self.ToolBarLayoutWidget)
+        self.ToolBarLayoutWidget.setLayout(self.ToolBarLayout)
+
+
+        self.scroll.setGeometry(820, -1, 500, 551)
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll.setWidgetResizable(True)
+
+        self.ToolBarLayoutWidget.setObjectName("ToolBarLayoutWidget")
+
+        self.ToolBarLayout.setContentsMargins(0, 0, 0, 0)
+        self.ToolBarLayout.setObjectName("ToolBarLayout")
+        self.ToolBarLayout.setAlignment(QtCore.Qt.AlignTop)
+
+        self.testNewWidget = ExpandWidget()
+        self.testNewWidget2 = ExpandWidget()
+        self.testNewWidget3 = ExpandWidget()
+        self.ToolBarLayout.addWidget(self.testNewWidget)
+        self.ToolBarLayout.addWidget(self.testNewWidget2)
+        self.ToolBarLayout.addWidget(self.testNewWidget3)
 
     # ---- 
     def retranslateUi(self, MainWindow):

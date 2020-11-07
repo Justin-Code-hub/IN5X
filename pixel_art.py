@@ -171,6 +171,8 @@ class Ui_MainWindow(object):
         self.pushButton_exporter = QtWidgets.QPushButton(self.ButtonLayoutWidget)
         self.pushButton_exporter.setMinimumSize(QtCore.QSize(0, 70))
         self.pushButton_exporter.setObjectName("pushButton_exporter")
+        self.pushButton_exporter.clicked.connect(self.exportImage)
+
         self.ButtonLayout.addWidget(self.pushButton_exporter)
 
 
@@ -281,6 +283,7 @@ class Ui_MainWindow(object):
         self.label_image_original.setMinimumSize(1,1)
         self.label_image_original.setPixmap(QtGui.QPixmap(fname[0]).scaled(self.label_image_pixel.size(),QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
         #---
+        print("adress : ",fname[0])
         image = QtGui.QImage(fname[0])
         self.saveTemp(image)
        
@@ -297,6 +300,13 @@ class Ui_MainWindow(object):
 #-----------------------------------------
     def saveTemp(self,image):
     	image.save("File/temp.png")
+
+    def exportImage(self):
+        fname = QFileDialog().getSaveFileName( None, 'Save File', '', '*.png')
+        print("Export Path : " , fname)
+        if(fname[0] != ''):
+            pixmap = QtGui.QImage("File/temp.png")
+            pixmap.save(fname[0])
 
 
 

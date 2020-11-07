@@ -71,6 +71,10 @@ class ExpandWidgetHeader (QtWidgets.QLabel):
 ##############################################################
 
 class Ui_MainWindow(object):
+
+
+
+
     def setupUi(self, MainWindow):
 
         # -- Main Window --
@@ -162,6 +166,7 @@ class Ui_MainWindow(object):
         self.pushButton_generer = QtWidgets.QPushButton(self.ButtonLayoutWidget)
         self.pushButton_generer.setMinimumSize(QtCore.QSize(0, 70))
         self.pushButton_generer.setObjectName("pushButton_generer")
+        self.pushButton_generer.setEnabled(False)
 		
         self.pushButton_generer.clicked.connect(self.generateImage)
         
@@ -172,6 +177,7 @@ class Ui_MainWindow(object):
         self.pushButton_exporter.setMinimumSize(QtCore.QSize(0, 70))
         self.pushButton_exporter.setObjectName("pushButton_exporter")
         self.pushButton_exporter.clicked.connect(self.exportImage)
+        self.pushButton_exporter.setEnabled(False)
 
         self.ButtonLayout.addWidget(self.pushButton_exporter)
 
@@ -286,6 +292,10 @@ class Ui_MainWindow(object):
         print("adress : ",fname[0])
         image = QtGui.QImage(fname[0])
         self.saveTemp(image)
+
+        self.pushButton_generer.setEnabled(True)
+
+
        
 
 # Code de Lucien permet d'afficher l'image "temp.png" qu'on updatera en faite a chaque opération sur l'image
@@ -296,6 +306,9 @@ class Ui_MainWindow(object):
         self.label_image_pixel.setMinimumSize(1,1)
         self.label_image_pixel.setPixmap(pixmap.scaled(self.label_image_pixel.size(),QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
         #self.label_image_pixel.setScaledContents(True)
+
+        self.pushButton_exporter.setEnabled(True)
+
         
 #-----------------------------------------
     def saveTemp(self,image):

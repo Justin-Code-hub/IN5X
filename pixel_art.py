@@ -20,9 +20,14 @@ from PyQt5.QtWidgets import *
 import sys
 
 
+MIN_WIDTH = 600
+MIN_HEIGHT = 300
+MAX_WIDTH = 1800
+MAX_HEIGHT = 900
+DEFAULT_WIDTH = 1500
+DEFAULT_HEIGHT = 822
 
-
-
+MARGE = 80
 
 
 ##############################################################
@@ -72,15 +77,15 @@ class ExpandWidgetHeader (QtWidgets.QLabel):
 
 class Ui_MainWindow(object):
 
-
-
-
     def setupUi(self, MainWindow):
 
         # -- Main Window --
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1500, 822)
+        MainWindow.setMinimumSize(MIN_WIDTH,MIN_HEIGHT)
+        MainWindow.setMaximumSize(MAX_WIDTH,MAX_HEIGHT)
+        MainWindow.resize(DEFAULT_WIDTH, DEFAULT_HEIGHT)
         MainWindow.setAutoFillBackground(True)
+
 
         # -- central widget --
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -88,12 +93,11 @@ class Ui_MainWindow(object):
 
         # -- ImageLayout --
         self.ImageLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.ImageLayoutWidget.setGeometry(QtCore.QRect(-1, -1, 801, 551))
         self.ImageLayoutWidget.setObjectName("ImageLayoutWidget")
         self.ImageLayoutWidget.setStyleSheet("border: 1px solid #000000; background: #C4C4C1")
 
         self.ImageLayout = QtWidgets.QHBoxLayout(self.ImageLayoutWidget)
-        self.ImageLayout.setContentsMargins(0, 0, 0, 0)
+        #self.ImageLayout.setContentsMargins(0, 0, 0, 0)
         self.ImageLayout.setObjectName("ImageLayout")
 
         self.setupLabelImageUi(MainWindow)
@@ -102,12 +106,13 @@ class Ui_MainWindow(object):
 
         # Button Layout
         self.ButtonLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.ButtonLayoutWidget.setGeometry(QtCore.QRect(-1, 569, 1001, 201))
         self.ButtonLayoutWidget.setObjectName("ButtonLayoutWidget")
         self.ButtonLayout = QtWidgets.QHBoxLayout(self.ButtonLayoutWidget)
-        self.ButtonLayout.setContentsMargins(30, 0, 30, 0)
-        self.ButtonLayout.setSpacing(30)
+        #self.ButtonLayout.setContentsMargins(30, 0, 30, 0)
+        #self.ButtonLayout.setSpacing(30)
         self.ButtonLayout.setObjectName("ButtonLayout")
+        self.ButtonLayoutWidget.setStyleSheet("border: 1px solid #000000; background: #C4C4C1")
+
         self.setupButtonUi(MainWindow)
 
 
@@ -119,6 +124,9 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        self.setDifferentSize()
+        MainWindow.resizeEvent = self.UpdateSize
         
 
 
@@ -156,7 +164,7 @@ class Ui_MainWindow(object):
     def setupButtonUi(self, MainWindow):
         # --  --
         self.pushButton_ouvrir = QtWidgets.QPushButton(self.ButtonLayoutWidget)
-        self.pushButton_ouvrir.setMinimumSize(QtCore.QSize(0, 70))
+        #self.pushButton_ouvrir.setMinimumSize(QtCore.QSize(0, 70))
         self.pushButton_ouvrir.setObjectName("pushButton_ouvrir")
         
         self.pushButton_ouvrir.clicked.connect(self.openImage)
@@ -164,9 +172,10 @@ class Ui_MainWindow(object):
 
         # --  --
         self.pushButton_generer = QtWidgets.QPushButton(self.ButtonLayoutWidget)
-        self.pushButton_generer.setMinimumSize(QtCore.QSize(0, 70))
+        #self.pushButton_generer.setMinimumSize(QtCore.QSize(0, 70))
         self.pushButton_generer.setObjectName("pushButton_generer")
         self.pushButton_generer.setEnabled(False)
+
 		
         self.pushButton_generer.clicked.connect(self.generateImage)
         
@@ -174,7 +183,7 @@ class Ui_MainWindow(object):
 
         # --  --
         self.pushButton_exporter = QtWidgets.QPushButton(self.ButtonLayoutWidget)
-        self.pushButton_exporter.setMinimumSize(QtCore.QSize(0, 70))
+        #self.pushButton_exporter.setMinimumSize(QtCore.QSize(0, 70))
         self.pushButton_exporter.setObjectName("pushButton_exporter")
         self.pushButton_exporter.clicked.connect(self.exportImage)
         self.pushButton_exporter.setEnabled(False)
@@ -235,7 +244,6 @@ class Ui_MainWindow(object):
         self.ToolBarLayoutWidget.setLayout(self.ToolBarLayout)
 
 
-        self.scroll.setGeometry(820, -1, 500, 551)
         self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.scroll.setWidgetResizable(True)
@@ -324,9 +332,36 @@ class Ui_MainWindow(object):
 
 
 
+    def UpdateSize(self,event):
+        self.setDifferentSize()
+
+    def setDifferentSize(self):
+
+        self.ImageLayoutWidget.setGeometry(QtCore.QRect(
+            -1,
+            -1,
+            MainWindow.size().width() * (4/5), 
+            (MainWindow.frameGeometry().height() - MARGE)  * (4/5)
+        ))
+        
+        self.ButtonLayoutWidget.setGeometry(QtCore.QRect(
+            -1, 
+            self.ImageLayoutWidget.height(),  
+            self.ImageLayoutWidget.width(), 
+            MainWindow.frameGeometry().height()- MARGE - self.ImageLayoutWidget.frameGeometry().height() 
+        ) )
+ 
+        self.scroll.setGeometry(
+            self.ImageLayoutWidget.width(), 
+            -1, 
+            MainWindow.frameGeometry().width() - self.ImageLayoutWidget.frameGeometry().width(), 
+            MainWindow.frameGeometry().height()- MARGE
+        )
 
 
-
+        self.pushButton_generer.setMinimumSize(QtCore.QSize(0, self.ButtonLayoutWidget.frameGeometry().height()/2))
+        self.pushButton_ouvrir.setMinimumSize(QtCore.QSize(0, self.ButtonLayoutWidget.frameGeometry().height()/2))
+        self.pushButton_exporter.setMinimumSize(QtCore.QSize(0, self.ButtonLayoutWidget.frameGeometry().height()/2))
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

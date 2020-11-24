@@ -39,17 +39,15 @@ class ExpandWidget(QtWidgets.QWidget) :
         super(ExpandWidget, self).__init__(*args, **kwargs)
         
         self.setStyleSheet("border: 1px solid #000000; background: #C4C4C1")
-
-        self.setMinimumSize(330, 100)
+        self.setMinimumSize(330, 25)
         self.Header = ExpandWidgetHeader(self)
         self.Header.mousePressEvent = self.hideBody         
-
         self.Body = QtWidgets.QWidget(self)
-        self.Body.setGeometry(0, 25, 330, 400)
         self.Body.hide()
-        self.setMinimumSize(330, 25)
 
-        #QtCore.QObject.connect(self.Header, SIGNAL(headerClicked(bool)),self,SLOT(hideBody(bool)))
+    def setSize(self, width):
+        self.Body.setGeometry(0,25,width, 400)
+        self.Header.setGeometry(0,0,width,25)
 
     def hideBody(self,eve):
         if not self.Header.m_isHidden : 
@@ -69,7 +67,6 @@ class ExpandWidgetHeader (QtWidgets.QLabel):
         self.m_isHidden= True
         self.setText("Text")
         self.setStyleSheet("border: 1px solid #000000; background: #898983")
-        self.setGeometry(0, 0, 330, 25)
         self.setAlignment(Qt.AlignCenter)
 
     
@@ -362,6 +359,13 @@ class Ui_MainWindow(object):
         self.pushButton_generer.setMinimumSize(QtCore.QSize(0, self.ButtonLayoutWidget.frameGeometry().height()/2))
         self.pushButton_ouvrir.setMinimumSize(QtCore.QSize(0, self.ButtonLayoutWidget.frameGeometry().height()/2))
         self.pushButton_exporter.setMinimumSize(QtCore.QSize(0, self.ButtonLayoutWidget.frameGeometry().height()/2))
+
+        cte = 22
+        self.testNewWidget.setSize(self.scroll.frameGeometry().width() -cte)
+        self.testNewWidget2.setSize(self.scroll.frameGeometry().width()-cte)
+        self.testNewWidget3.setSize(self.scroll.frameGeometry().width()-cte)
+
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

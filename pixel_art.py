@@ -192,30 +192,45 @@ class Ui_MainWindow(object):
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1014, 21))
         self.menubar.setObjectName("menubar")
+
         self.menuFichier = QtWidgets.QMenu(self.menubar)
         self.menuFichier.setObjectName("menuFichier")
         MainWindow.setMenuBar(self.menubar)
+        
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        
         self.actionNouveau = QtWidgets.QAction(MainWindow)
         self.actionNouveau.setObjectName("actionNouveau")
+        
         self.actionOuvrir = QtWidgets.QAction(MainWindow)
         self.actionOuvrir.setObjectName("actionOuvrir")
+        
         self.actionOuvrir_une_image = QtWidgets.QAction(MainWindow)
         self.actionOuvrir_une_image.setObjectName("actionOuvrir_une_image")
+        self.actionOuvrir_une_image.triggered.connect(self.openImage)
+        
         self.actionEnregistrer = QtWidgets.QAction(MainWindow)
         self.actionEnregistrer.setObjectName("actionEnregistrer")
+        
         self.actionEnregistrer_une_copie = QtWidgets.QAction(MainWindow)
         self.actionEnregistrer_une_copie.setObjectName("actionEnregistrer_une_copie")
+        
         self.actionImporter_une_Palette = QtWidgets.QAction(MainWindow)
         self.actionImporter_une_Palette.setObjectName("actionImporter_une_Palette")
         self.actionExporter_une_Palette = QtWidgets.QAction(MainWindow)
         self.actionExporter_une_Palette.setObjectName("actionExporter_une_Palette")
+        
         self.actionExporter_Pixel_Art = QtWidgets.QAction(MainWindow)
         self.actionExporter_Pixel_Art.setObjectName("actionExporter_Pixel_Art")
+        self.actionExporter_Pixel_Art.triggered.connect(self.exportImage)
+
+        
         self.actionQuitter = QtWidgets.QAction(MainWindow)
         self.actionQuitter.setObjectName("actionQuitter")
+        self.actionQuitter.triggered.connect(lambda:QApplication.quit())
+        
         self.menuFichier.addAction(self.actionNouveau)
         self.menuFichier.addAction(self.actionOuvrir)
         self.menuFichier.addAction(self.actionOuvrir_une_image)
@@ -230,6 +245,7 @@ class Ui_MainWindow(object):
         self.menuFichier.addSeparator()
         self.menuFichier.addAction(self.actionQuitter)
         self.menubar.addAction(self.menuFichier.menuAction())
+
 
     def setupToolBarUi(self, MainWindow):
         # -- ToolBar Layout --

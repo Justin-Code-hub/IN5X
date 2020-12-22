@@ -17,6 +17,14 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import * 
 
 
+# pixel art import
+from PIL import Image
+from pyxelate import Pyxelate
+from skimage import io
+import matplotlib.pyplot as plt
+from skimage import io
+
+
 import sys
 
 
@@ -74,6 +82,7 @@ class ExpandWidgetHeader (QtWidgets.QLabel):
 
 class Ui_MainWindow(object):
 
+
     def setupUi(self, MainWindow):
 
         # -- Main Window --
@@ -125,8 +134,6 @@ class Ui_MainWindow(object):
         self.setDifferentSize()
         MainWindow.resizeEvent = self.UpdateSize
         
-
-
 
     # ---- Setup Ui Fonction ----
     def setupLabelImageUi(self, MainWindow):
@@ -304,6 +311,7 @@ class Ui_MainWindow(object):
     	
         fname = QFileDialog.getOpenFileName()
         print(fname)
+        self.ImportImageName = fname[0]
         print(self.label_image_original.size())
         
         self.label_image_original.setPixmap(QtGui.QPixmap(fname[0]))
@@ -319,8 +327,12 @@ class Ui_MainWindow(object):
 
        
 
-# Code de Lucien permet d'afficher l'image "temp.png" qu'on updatera en faite a chaque opération sur l'image
+    # Code de Lucien permet d'afficher l'image "temp.png" qu'on updatera en faite a chaque opération sur l'image
     def generateImage(self):
+        #self.PixelisationBicubic()
+        
+        self.Pixelate()
+
         print(self.label_image_pixel.size())
         pixmap = QtGui.QPixmap("File/temp.png")
         self.label_image_pixel.setPixmap(pixmap)
@@ -331,7 +343,7 @@ class Ui_MainWindow(object):
         self.pushButton_exporter.setEnabled(True)
 
         
-#-----------------------------------------
+    #-----------------------------------------
     def saveTemp(self,image):
     	image.save("File/temp.png")
 
@@ -343,8 +355,7 @@ class Ui_MainWindow(object):
             pixmap.save(fname[0])
 
 
-
-
+    # Manage the size of the window
     def UpdateSize(self,event):
         self.setDifferentSize()
 
@@ -380,6 +391,33 @@ class Ui_MainWindow(object):
         self.testNewWidget.setSize(self.scroll.frameGeometry().width() -cte)
         self.testNewWidget2.setSize(self.scroll.frameGeometry().width()-cte)
         self.testNewWidget3.setSize(self.scroll.frameGeometry().width()-cte)
+
+
+    def PixelisationBicubic(self):
+        # on va chercher l'image
+        img = Image.open( self.ImportImageName )
+
+        #img = img.resize((40, 40), resample = Image.BICUBIC)
+        #img = img.resize((40, 40), resample = Image.NEAREST)
+        img = img.resize((40, 40), resample = Image.ANTIALIAS)
+
+        #img.show()
+        img.save("File/temp.png")
+
+    def Pixelate(self):
+        img = io.imread(self.ImportImageName)
+        height, width, _ = img.shape
+        factor = 2
+        colors = 10
+        dither = True
+
+        p = Pyxelate(height // factor, width // factor, colors, dither)
+        img_shall = p.convert(img)
+
+        _, axes = plt.subplots(1, 2, figsize=(16,16))
+        axes[0].imshow(img)
+        axes[1].imshow(img_shall)
+        io.imsave("File/temp.png", img_shall)
 
 
 if __name__ == "__main__":

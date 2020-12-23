@@ -24,7 +24,7 @@ from skimage import io
 import matplotlib.pyplot as plt
 from skimage import io
 
-
+import time
 import sys
 
 
@@ -109,6 +109,7 @@ class Ui_MainWindow(object):
         self.setupLabelImageUi(MainWindow)
         # ---
         self.setupToolBarUi(MainWindow)
+        self.setupPAMethodeSectionUI(MainWindow)
 
         # Button Layout
         self.ButtonLayoutWidget = QtWidgets.QWidget(self.centralwidget)
@@ -207,6 +208,8 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.statusbar.showMessage("")
+
         
         self.actionNouveau = QtWidgets.QAction(MainWindow)
         self.actionNouveau.setObjectName("actionNouveau")
@@ -274,13 +277,32 @@ class Ui_MainWindow(object):
         self.ToolBarLayout.setObjectName("ToolBarLayout")
         self.ToolBarLayout.setAlignment(QtCore.Qt.AlignTop)
 
-        self.testNewWidget = ExpandWidget()
+        self.PAMethodeSectionWidget = ExpandWidget()
         self.testNewWidget2 = ExpandWidget()
         self.testNewWidget3 = ExpandWidget()
-        self.ToolBarLayout.addWidget(self.testNewWidget)
+        self.ToolBarLayout.addWidget(self.PAMethodeSectionWidget)
         self.ToolBarLayout.addWidget(self.testNewWidget2)
         self.ToolBarLayout.addWidget(self.testNewWidget3)
 
+    def setupPAMethodeSectionUI(self, MainWindow):
+        MethodeTitre = QLabel('Choisissez la méthode voulu')
+        self.rbtn_BICUBIC = QRadioButton('BICUBIC')
+        self.rbtn_BICUBIC.setChecked(True)
+        self.rbtn_NEAREST = QRadioButton('NEAREST')
+        self.rbtn_ANTIALIAS = QRadioButton('ANTIALIAS')
+        self.rbtn_Pixelate = QRadioButton('Pixelate')
+        
+
+        layout = QVBoxLayout()
+        layout.addWidget(MethodeTitre)
+        layout.addWidget(self.rbtn_BICUBIC)
+
+        layout.addWidget(self.rbtn_NEAREST)
+        layout.addWidget(self.rbtn_ANTIALIAS)
+        layout.addWidget(self.rbtn_Pixelate)
+
+        self.PAMethodeSectionWidget.Body.setLayout(layout)
+        self.PAMethodeSectionWidget.Header.setText("Methode De Pixelisation")
     # ---- 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -325,13 +347,22 @@ class Ui_MainWindow(object):
         self.pushButton_generer.setEnabled(True)
 
 
-       
-
     # Code de Lucien permet d'afficher l'image "temp.png" qu'on updatera en faite a chaque opération sur l'image
     def generateImage(self):
-        #self.PixelisationBicubic()
-        
-        self.Pixelate()
+
+        if self.rbtn_BICUBIC.isChecked() :
+            self.PixelisationBicubic()
+
+        if self.rbtn_NEAREST.isChecked() :
+            self.PixelisationNearest()
+
+        if self.rbtn_ANTIALIAS.isChecked() :
+            self.PixelisationAntialias()
+
+        if self.rbtn_Pixelate.isChecked() :
+
+            self.PixelisationPixelate()
+
 
         print(self.label_image_pixel.size())
         pixmap = QtGui.QPixmap("File/temp.png")
@@ -388,7 +419,7 @@ class Ui_MainWindow(object):
         self.pushButton_exporter.setMinimumSize(QtCore.QSize(0, self.ButtonLayoutWidget.frameGeometry().height()/2))
 
         cte = 22
-        self.testNewWidget.setSize(self.scroll.frameGeometry().width() -cte)
+        self.PAMethodeSectionWidget.setSize(self.scroll.frameGeometry().width() -cte)
         self.testNewWidget2.setSize(self.scroll.frameGeometry().width()-cte)
         self.testNewWidget3.setSize(self.scroll.frameGeometry().width()-cte)
 
@@ -396,15 +427,23 @@ class Ui_MainWindow(object):
     def PixelisationBicubic(self):
         # on va chercher l'image
         img = Image.open( self.ImportImageName )
-
-        #img = img.resize((40, 40), resample = Image.BICUBIC)
-        #img = img.resize((40, 40), resample = Image.NEAREST)
-        img = img.resize((40, 40), resample = Image.ANTIALIAS)
-
-        #img.show()
+        img = img.resize((40, 40), resample = Image.BICUBIC)
         img.save("File/temp.png")
 
-    def Pixelate(self):
+
+    def PixelisationNearest(self):
+        img = Image.open( self.ImportImageName )
+        img = img.resize((40, 40), resample = Image.NEAREST)
+        img.save("File/temp.png")
+
+    def PixelisationAntialias(self):
+
+        img = Image.open( self.ImportImageName )
+        img = img.resize((40, 40), resample = Image.ANTIALIAS)
+        img.save("File/temp.png")
+
+
+    def PixelisationPixelate(self):
         img = io.imread(self.ImportImageName)
         height, width, _ = img.shape
         factor = 2
@@ -412,12 +451,14 @@ class Ui_MainWindow(object):
         dither = True
 
         p = Pyxelate(height // factor, width // factor, colors, dither)
+
         img_shall = p.convert(img)
 
         _, axes = plt.subplots(1, 2, figsize=(16,16))
         axes[0].imshow(img)
         axes[1].imshow(img_shall)
         io.imsave("File/temp.png", img_shall)
+        self.statusbar.showMessage('Image Généré')
 
 
 if __name__ == "__main__":

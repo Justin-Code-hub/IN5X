@@ -16,10 +16,11 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import * 
 from PyQt5.QtWidgets import * 
 
+from palette import PaletteGrid
 
 # pixel art import
 from PIL import Image
-from pyxelate import Pyxelate
+#from pyxelate import Pyxelate
 from skimage import io
 import matplotlib.pyplot as plt
 from skimage import io
@@ -110,6 +111,7 @@ class Ui_MainWindow(object):
         # ---
         self.setupToolBarUi(MainWindow)
         self.setupPAMethodeSectionUI(MainWindow)
+        self.setupColorPaletteSelectionUI(MainWindow)
 
         # Button Layout
         self.ButtonLayoutWidget = QtWidgets.QWidget(self.centralwidget)
@@ -278,10 +280,10 @@ class Ui_MainWindow(object):
         self.ToolBarLayout.setAlignment(QtCore.Qt.AlignTop)
 
         self.PAMethodeSectionWidget = ExpandWidget()
-        self.testNewWidget2 = ExpandWidget()
+        self.colorPaletteSelectionUI = ExpandWidget()
         self.testNewWidget3 = ExpandWidget()
         self.ToolBarLayout.addWidget(self.PAMethodeSectionWidget)
-        self.ToolBarLayout.addWidget(self.testNewWidget2)
+        self.ToolBarLayout.addWidget(self.colorPaletteSelectionUI)
         self.ToolBarLayout.addWidget(self.testNewWidget3)
 
     def setupPAMethodeSectionUI(self, MainWindow):
@@ -303,6 +305,53 @@ class Ui_MainWindow(object):
 
         self.PAMethodeSectionWidget.Body.setLayout(layout)
         self.PAMethodeSectionWidget.Header.setText("Methode De Pixelisation")
+        
+       
+    # -- Gestion de la palette de couleur --        
+    def setupColorPaletteSelectionUI(self, MainWindow):
+        
+        self.layout_palette = QVBoxLayout()
+        
+        self.pb_palette_add = QtWidgets.QPushButton('Ajouter Couleur', MainWindow)
+        self.pb_palette_add.clicked.connect(self.addColor)
+        self.cb_palette_remove = QtWidgets.QCheckBox('Retirer Couleur', MainWindow)
+        
+        self.removeEnabled = False
+        self.color_list_as_string = []
+        self.palette = PaletteGrid(self.color_list_as_string, 8)
+        self.palette.selected.connect(self.removeColor)
+        
+        self.layout_palette = QVBoxLayout()
+        self.layout_palette.addWidget(self.pb_palette_add)
+        self.layout_palette.addWidget(self.cb_palette_remove)
+        self.layout_palette.addWidget(self.palette)
+        
+        self.colorPaletteSelectionUI.Body.setLayout(self.layout_palette)
+        self.colorPaletteSelectionUI.Header.setText("Gestion Palette")
+        
+        
+    def addColor(self):
+        color = QColorDialog.getColor()
+        if color.isValid():
+            self.color_list_as_string.append(color.name())
+            self.updatePalette()
+        
+    def removeColor(self, c):
+        if self.cb_palette_remove.checkState() == 2:
+            if c in self.color_list_as_string: 
+                self.color_list_as_string.remove(c)
+                self.updatePalette()
+    
+    def updatePalette(self):
+        self.layout_palette.removeWidget(self.palette)
+        self.palette.hide()
+        
+        self.palette = PaletteGrid(self.color_list_as_string, 8)
+        self.palette.selected.connect(self.removeColor)
+        
+        self.layout_palette.addWidget(self.palette)
+        
+        
     # ---- 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -420,7 +469,7 @@ class Ui_MainWindow(object):
 
         cte = 22
         self.PAMethodeSectionWidget.setSize(self.scroll.frameGeometry().width() -cte)
-        self.testNewWidget2.setSize(self.scroll.frameGeometry().width()-cte)
+        self.colorPaletteSelectionUI.setSize(self.scroll.frameGeometry().width()-cte)
         self.testNewWidget3.setSize(self.scroll.frameGeometry().width()-cte)
 
 

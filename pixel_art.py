@@ -20,10 +20,12 @@ from palette import PaletteGrid
 
 # pixel art import
 from PIL import Image
-#from pyxelate import Pyxelate
+from pyxelate import Pyxelate
 from skimage import io
 import matplotlib.pyplot as plt
 from skimage import io
+
+
 
 import time
 import sys
@@ -281,13 +283,12 @@ class Ui_MainWindow(object):
 
         self.PAMethodeSectionWidget = ExpandWidget()
         self.colorPaletteSelectionUI = ExpandWidget()
-        self.testNewWidget3 = ExpandWidget()
         self.ToolBarLayout.addWidget(self.PAMethodeSectionWidget)
         self.ToolBarLayout.addWidget(self.colorPaletteSelectionUI)
-        self.ToolBarLayout.addWidget(self.testNewWidget3)
 
     def setupPAMethodeSectionUI(self, MainWindow):
         MethodeTitre = QLabel('Choisissez la méthode voulu')
+        MethodeTitre.setMaximumHeight(40)
         self.rbtn_BICUBIC = QRadioButton('BICUBIC')
         self.rbtn_BICUBIC.setChecked(True)
         self.rbtn_NEAREST = QRadioButton('NEAREST')
@@ -296,6 +297,8 @@ class Ui_MainWindow(object):
         
 
         layout = QVBoxLayout()
+        layout.setSpacing(10); 
+
         layout.addWidget(MethodeTitre)
         layout.addWidget(self.rbtn_BICUBIC)
 
@@ -409,7 +412,6 @@ class Ui_MainWindow(object):
             self.PixelisationAntialias()
 
         if self.rbtn_Pixelate.isChecked() :
-
             self.PixelisationPixelate()
 
 
@@ -470,7 +472,6 @@ class Ui_MainWindow(object):
         cte = 22
         self.PAMethodeSectionWidget.setSize(self.scroll.frameGeometry().width() -cte)
         self.colorPaletteSelectionUI.setSize(self.scroll.frameGeometry().width()-cte)
-        self.testNewWidget3.setSize(self.scroll.frameGeometry().width()-cte)
 
 
     def PixelisationBicubic(self):

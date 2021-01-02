@@ -457,12 +457,12 @@ class AbstractionResampler:
 
 		return [eVec, eVal]
 
-img = io.imread("mario.jpg")
-#img = io.imread("bridge_1.jpg")
+# img = io.imread("mario.jpg")
+# #img = io.imread("bridge_1.jpg")
 
-sampler = AbstractionResampler(img, 225, 225)
-sampler.resample()
+# sampler = AbstractionResampler(img, 225, 225)
+# sampler.resample()
 
-plt.figure()
-io.imshow(sampler.output_lab)
-plt.show()
+# plt.figure()
+# io.imshow(sampler.output_lab)
+# plt.show()

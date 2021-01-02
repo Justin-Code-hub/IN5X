@@ -25,7 +25,11 @@ from skimage import io
 import matplotlib.pyplot as plt
 from skimage import io
 
+#AbstractionResampler
+from AbstractionResampler import AbstractionResampler
 
+#Texture
+from Texture import apply_texture
 
 import time
 import sys
@@ -294,6 +298,7 @@ class Ui_MainWindow(object):
         self.rbtn_NEAREST = QRadioButton('NEAREST')
         self.rbtn_ANTIALIAS = QRadioButton('ANTIALIAS')
         self.rbtn_Pixelate = QRadioButton('Pixelate')
+        self.rbtn_Resampler= QRadioButton('Abstraction Resampler (Alpha Version)')
         
 
         layout = QVBoxLayout()
@@ -305,6 +310,7 @@ class Ui_MainWindow(object):
         layout.addWidget(self.rbtn_NEAREST)
         layout.addWidget(self.rbtn_ANTIALIAS)
         layout.addWidget(self.rbtn_Pixelate)
+        layout.addWidget(self.rbtn_Resampler)
 
         self.PAMethodeSectionWidget.Body.setLayout(layout)
         self.PAMethodeSectionWidget.Header.setText("Methode De Pixelisation")
@@ -314,7 +320,9 @@ class Ui_MainWindow(object):
     def setupColorPaletteSelectionUI(self, MainWindow):
         
         self.layout_palette = QVBoxLayout()
-        
+
+        self.cb_use_palette = QtWidgets.QCheckBox('Utiliser la palette ?', MainWindow)
+
         self.pb_palette_add = QtWidgets.QPushButton('Ajouter Couleur', MainWindow)
         self.pb_palette_add.clicked.connect(self.addColor)
         self.cb_palette_remove = QtWidgets.QCheckBox('Retirer Couleur', MainWindow)
@@ -325,6 +333,8 @@ class Ui_MainWindow(object):
         self.palette.selected.connect(self.removeColor)
         
         self.layout_palette = QVBoxLayout()
+        self.layout_palette.addWidget(self.cb_use_palette)
+
         self.layout_palette.addWidget(self.pb_palette_add)
         self.layout_palette.addWidget(self.cb_palette_remove)
         self.layout_palette.addWidget(self.palette)
@@ -414,6 +424,21 @@ class Ui_MainWindow(object):
         if self.rbtn_Pixelate.isChecked() :
             self.PixelisationPixelate()
 
+        if self.rbtn_Resampler.isChecked():
+            self.PixelisationAbstractionResampler()
+
+
+        if self.cb_use_palette.isChecked() :
+            if len(self.color_list_as_string) > 0 :
+                img = io.imread("File/temp.png")
+                img = apply_texture( img ,self.color_list_as_string)
+                io.imsave("File/temp.png", img)
+            else :
+                msgBox = QMessageBox()
+                msgBox.setIcon(QMessageBox.Critical)
+                msgBox.setWindowTitle("Erreur 2020")
+                msgBox.setText("Il faut au moins une couleur")
+                msgBox.exec()
 
         print(self.label_image_pixel.size())
         pixmap = QtGui.QPixmap("File/temp.png")
@@ -494,6 +519,7 @@ class Ui_MainWindow(object):
 
 
     def PixelisationPixelate(self):
+        self.ShowLeCalculEstLong()
         img = io.imread(self.ImportImageName)
         height, width, _ = img.shape
         factor = 2
@@ -509,6 +535,32 @@ class Ui_MainWindow(object):
         axes[1].imshow(img_shall)
         io.imsave("File/temp.png", img_shall)
         self.statusbar.showMessage('Image Généré')
+
+    def PixelisationAbstractionResampler(self):
+        img = io.imread(self.ImportImageName)
+        #Si image pas carré ça marche pas
+        if img.shape[0] == img.shape[1] : 
+            self.ShowLeCalculEstLong()
+            sampler = AbstractionResampler(img, 32, 32)
+            sampler.resample()
+
+            io.imsave("File/temp.png", sampler.output_lab)
+        else :
+            print("ça marche pas")
+            msgBox = QMessageBox()
+            msgBox.setIcon(QMessageBox.Critical)
+            msgBox.setWindowTitle("Erreur 2020")
+            msgBox.setText("L'image doit être carré.")
+            msgBox.exec()
+
+
+
+    def ShowLeCalculEstLong(self):
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setWindowTitle("Message d'information")
+        msgBox.setText("Le Calcul de l'image peut prendre du temps")
+        msgBox.exec()
 
 
 if __name__ == "__main__":

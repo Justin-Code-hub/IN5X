@@ -24,12 +24,14 @@ from pyxelate import Pyxelate
 from skimage import io
 import matplotlib.pyplot as plt
 from skimage import io
+import numpy as np
 
 #AbstractionResampler
 from AbstractionResampler import AbstractionResampler
 
 #Texture
 from Texture import apply_texture
+from Texture import reduce_color
 
 import time
 import sys
@@ -527,7 +529,8 @@ class Ui_MainWindow(object):
         img = Image.open( self.ImportImageName )
         h,l = img.size
         img = img.resize((round(h/fr), round(l/fr)), resample = Image.BICUBIC)
-        img.save("File/temp.png")
+        img = reduce_color(np.array(img), int(self.le_nbColor.text()))
+        io.imsave("File/temp.png",img)
 
 
     def PixelisationNearest(self):
@@ -535,14 +538,17 @@ class Ui_MainWindow(object):
         img = Image.open( self.ImportImageName )
         h,l = img.size
         img = img.resize((round(h/fr), round(l/fr)), resample = Image.NEAREST)
-        img.save("File/temp.png")
-
+        img = reduce_color(np.array(img), int(self.le_nbColor.text()))
+        io.imsave("File/temp.png",img)
+        
+        
     def PixelisationAntialias(self):
         fr = int(self.le_facteurReduction.text())
         img = Image.open( self.ImportImageName )
         h,l = img.size
         img = img.resize((round(h/fr), round(l/fr)), resample = Image.ANTIALIAS)
-        img.save("File/temp.png")
+        img = reduce_color(np.array(img), int(self.le_nbColor.text()))
+        io.imsave("File/temp.png",img)
 
 
     def PixelisationPixelate(self):

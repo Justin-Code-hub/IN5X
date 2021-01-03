@@ -466,7 +466,7 @@ class Ui_MainWindow(object):
         pixmap = QtGui.QPixmap("File/temp.png")
         self.label_image_pixel.setPixmap(pixmap)
         self.label_image_pixel.setMinimumSize(1,1)
-        self.label_image_pixel.setPixmap(pixmap.scaled(self.label_image_pixel.size(),QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
+        self.label_image_pixel.setPixmap(pixmap.scaled(self.label_image_pixel.size(),QtCore.Qt.KeepAspectRatio,QtCore.Qt.FastTransformation))
         #self.label_image_pixel.setScaledContents(True)
 
         self.pushButton_exporter.setEnabled(True)

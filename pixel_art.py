@@ -33,6 +33,8 @@ from AbstractionResampler import AbstractionResampler
 from Texture import apply_texture
 from Texture import reduce_color
 
+from LineQT import QHLine
+
 import time
 import sys
 
@@ -322,6 +324,8 @@ class Ui_MainWindow(object):
         layout.addWidget(self.rbtn_Pixelate)
         layout.addWidget(self.rbtn_Resampler)
         
+        layout.addWidget(QHLine())
+
         layout.addWidget(self.nl_facteurReduction)
         layout.addWidget(self.le_facteurReduction)
 
@@ -357,6 +361,9 @@ class Ui_MainWindow(object):
         self.layout_palette.addWidget(self.nl_nbColor)
         self.layout_palette.addWidget(self.le_nbColor)
         
+        self.layout_palette.addWidget(QHLine())
+
+
         self.layout_palette.addWidget(self.cb_use_palette)
 
         self.layout_palette.addWidget(self.pb_palette_add)

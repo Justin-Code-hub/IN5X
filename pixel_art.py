@@ -300,6 +300,14 @@ class Ui_MainWindow(object):
         self.rbtn_Pixelate = QRadioButton('Pixelate')
         self.rbtn_Resampler= QRadioButton('Abstraction Resampler (Alpha Version)')
         
+        self.nl_facteurReduction = QLabel()
+        self.nl_facteurReduction.setText('Facteur de réduction :')
+        self.nl_facteurReduction.setMaximumHeight(20)
+        self.le_facteurReduction = QLineEdit()
+        self.le_facteurReduction.setText('2')
+        self.onlyInt = QIntValidator()
+        self.le_facteurReduction.setValidator(self.onlyInt)
+        
 
         layout = QVBoxLayout()
         layout.setSpacing(10); 
@@ -311,6 +319,9 @@ class Ui_MainWindow(object):
         layout.addWidget(self.rbtn_ANTIALIAS)
         layout.addWidget(self.rbtn_Pixelate)
         layout.addWidget(self.rbtn_Resampler)
+        
+        layout.addWidget(self.nl_facteurReduction)
+        layout.addWidget(self.le_facteurReduction)
 
         self.PAMethodeSectionWidget.Body.setLayout(layout)
         self.PAMethodeSectionWidget.Header.setText("Methode De Pixelisation")
@@ -320,6 +331,14 @@ class Ui_MainWindow(object):
     def setupColorPaletteSelectionUI(self, MainWindow):
         
         self.layout_palette = QVBoxLayout()
+        
+        self.nl_nbColor = QLabel()
+        self.nl_nbColor.setText('Nombre couleur :')
+        self.nl_nbColor.setMaximumHeight(20)
+        self.le_nbColor = QLineEdit()
+        self.le_nbColor.setText('10')
+        self.onlyInt = QIntValidator()
+        self.le_nbColor.setValidator(self.onlyInt)
 
         self.cb_use_palette = QtWidgets.QCheckBox('Utiliser la palette ?', MainWindow)
 
@@ -333,6 +352,9 @@ class Ui_MainWindow(object):
         self.palette.selected.connect(self.removeColor)
         
         self.layout_palette = QVBoxLayout()
+        self.layout_palette.addWidget(self.nl_nbColor)
+        self.layout_palette.addWidget(self.le_nbColor)
+        
         self.layout_palette.addWidget(self.cb_use_palette)
 
         self.layout_palette.addWidget(self.pb_palette_add)
@@ -501,20 +523,25 @@ class Ui_MainWindow(object):
 
     def PixelisationBicubic(self):
         # on va chercher l'image
+        fr = int(self.le_facteurReduction.text())
         img = Image.open( self.ImportImageName )
-        img = img.resize((40, 40), resample = Image.BICUBIC)
+        h,l = img.size
+        img = img.resize((round(h/fr), round(l/fr)), resample = Image.BICUBIC)
         img.save("File/temp.png")
 
 
     def PixelisationNearest(self):
+        fr = int(self.le_facteurReduction.text())
         img = Image.open( self.ImportImageName )
-        img = img.resize((40, 40), resample = Image.NEAREST)
+        h,l = img.size
+        img = img.resize((round(h/fr), round(l/fr)), resample = Image.NEAREST)
         img.save("File/temp.png")
 
     def PixelisationAntialias(self):
-
+        fr = int(self.le_facteurReduction.text())
         img = Image.open( self.ImportImageName )
-        img = img.resize((40, 40), resample = Image.ANTIALIAS)
+        h,l = img.size
+        img = img.resize((round(h/fr), round(l/fr)), resample = Image.ANTIALIAS)
         img.save("File/temp.png")
 
 
@@ -522,8 +549,12 @@ class Ui_MainWindow(object):
         self.ShowLeCalculEstLong()
         img = io.imread(self.ImportImageName)
         height, width, _ = img.shape
-        factor = 2
-        colors = 10
+        factor = int(self.le_facteurReduction.text())
+        colors = int(self.le_nbColor.text())
+        if self.cb_use_palette.checkState() == 2:
+            colors = len(self.color_list_as_string)
+            
+        
         dither = True
 
         p = Pyxelate(height // factor, width // factor, colors, dither)

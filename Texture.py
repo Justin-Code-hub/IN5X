@@ -40,8 +40,9 @@ def nearest_neighbours_colors(img, palette):
 		
 		color_to_use.append(i)
 		palette_to_use.append(i)
-	
+        
 	print(color_distance)
+    
 	new_order = []
 	
 	while(len(new_order) != palette_size):
@@ -60,12 +61,12 @@ def nearest_neighbours_colors(img, palette):
 		palette_to_use.remove(index[1])
 
 	print(new_order)
-
+    
 	for x in range(w_in):
 		for y in range(h_in):
-			for c in range(palette_size):
-				if (img[x, y] == color_image[c]).all():
-					img_out[x, y] = palette[c]
+			for c in new_order:
+				if (img[x, y] == color_image[c[0]]).all():
+					img_out[x, y] = palette[c[1]]
 					#print(palette[c])
 
 	return img_out / 255.0
@@ -86,7 +87,7 @@ def apply_texture(img, palette_hex):
 
 	if len(dict_colors) > len(palette):
 		img = reduce_color(img, len(palette))
-
+    
 	img_out = nearest_neighbours_colors(img, palette)
 	return img_out
 	# plt.imshow(img_out)

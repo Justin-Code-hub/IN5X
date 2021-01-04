@@ -357,6 +357,12 @@ class Ui_MainWindow(object):
         self.palette = PaletteGrid(self.color_list_as_string, 8)
         self.palette.selected.connect(self.removeColor)
         
+        self.rbtn_CouleurPlusProche = QRadioButton('Couleur la plus proche')
+        self.rbtn_CouleurPlusProche.setChecked(True)
+        self.rbtn_IntesitePlusProche = QRadioButton('Intensite la plus proche')
+        
+        
+        
         self.layout_palette = QVBoxLayout()
         self.layout_palette.addWidget(self.nl_nbColor)
         self.layout_palette.addWidget(self.le_nbColor)
@@ -369,6 +375,10 @@ class Ui_MainWindow(object):
         self.layout_palette.addWidget(self.pb_palette_add)
         self.layout_palette.addWidget(self.cb_palette_remove)
         self.layout_palette.addWidget(self.palette)
+        self.layout_palette.addWidget(QHLine())
+        self.layout_palette.addWidget(self.rbtn_CouleurPlusProche)
+        self.layout_palette.addWidget(self.rbtn_IntesitePlusProche)
+        
         
         self.colorPaletteSelectionUI.Body.setLayout(self.layout_palette)
         self.colorPaletteSelectionUI.Header.setText("Gestion Palette")
@@ -393,7 +403,7 @@ class Ui_MainWindow(object):
         self.palette = PaletteGrid(self.color_list_as_string, 8)
         self.palette.selected.connect(self.removeColor)
         
-        self.layout_palette.addWidget(self.palette)
+        self.layout_palette.insertWidget(6, self.palette)
         
         
     # ---- 
@@ -462,7 +472,10 @@ class Ui_MainWindow(object):
         if self.cb_use_palette.isChecked() :
             if len(self.color_list_as_string) > 0 :
                 img = io.imread("File/temp.png")
-                img = apply_texture( img ,self.color_list_as_string)
+                typeDistance = 0
+                if (self.rbtn_IntesitePlusProche.isChecked()):
+                    typeDistance = 1
+                img = apply_texture(img, self.color_list_as_string, typeDistance)
                 io.imsave("File/temp.png", img)
             else :
                 msgBox = QMessageBox()
@@ -536,8 +549,11 @@ class Ui_MainWindow(object):
         img = Image.open( self.ImportImageName )
         h,l = img.size
         img = img.resize((round(h/fr), round(l/fr)), resample = Image.BICUBIC)
-        img = reduce_color(np.array(img), int(self.le_nbColor.text()))
-        io.imsave("File/temp.png",img)
+        if (int(self.le_nbColor.text()) != 0 & self.cb_use_palette.isChecked() == False):
+            img = reduce_color(np.array(img), int(self.le_nbColor.text()))
+            io.imsave("File/temp.png",img)
+        else:
+            img.save("File/temp.png")
 
 
     def PixelisationNearest(self):
@@ -545,8 +561,11 @@ class Ui_MainWindow(object):
         img = Image.open( self.ImportImageName )
         h,l = img.size
         img = img.resize((round(h/fr), round(l/fr)), resample = Image.NEAREST)
-        img = reduce_color(np.array(img), int(self.le_nbColor.text()))
-        io.imsave("File/temp.png",img)
+        if (int(self.le_nbColor.text()) != 0 & self.cb_use_palette.isChecked() == False):
+            img = reduce_color(np.array(img), int(self.le_nbColor.text()))
+            io.imsave("File/temp.png",img)
+        else:
+            img.save("File/temp.png")
         
         
     def PixelisationAntialias(self):
@@ -554,8 +573,11 @@ class Ui_MainWindow(object):
         img = Image.open( self.ImportImageName )
         h,l = img.size
         img = img.resize((round(h/fr), round(l/fr)), resample = Image.ANTIALIAS)
-        img = reduce_color(np.array(img), int(self.le_nbColor.text()))
-        io.imsave("File/temp.png",img)
+        if (int(self.le_nbColor.text()) != 0 & self.cb_use_palette.isChecked() == False):
+            img = reduce_color(np.array(img), int(self.le_nbColor.text()))
+            io.imsave("File/temp.png",img)
+        else:
+            img.save("File/temp.png")
 
 
     def PixelisationPixelate(self):

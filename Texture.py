@@ -12,7 +12,7 @@ def reduce_color(img, n_colors):
 
 	return less_colors
 
-def nearest_neighbours_colors(img, palette):
+def nearest_neighbours_colors(img, palette, typeDistance):
 	# colors should always be equal to 3
 	w_in, h_in, colors = img.shape
 	img_out = np.zeros((w_in, h_in, colors))
@@ -36,7 +36,10 @@ def nearest_neighbours_colors(img, palette):
 
 	for i in range(palette_size):
 		for j in range(palette_size):
-			color_distance[i, j] = np.linalg.norm(color_image[i] - palette[j])
+			if typeDistance == 0:
+				color_distance[i, j] = np.linalg.norm(color_image[i] - palette[j])
+			else:
+				color_distance[i, j] = np.linalg.norm(np.mean(color_image[i]) - np.mean(palette[j]))
 		
 		color_to_use.append(i)
 		palette_to_use.append(i)
@@ -71,7 +74,7 @@ def nearest_neighbours_colors(img, palette):
 
 	return img_out / 255.0
 		
-def apply_texture(img, palette_hex):
+def apply_texture(img, palette_hex, typeDistance):
 	w_in, h_in, _ = img.shape
 
 	# Convert list from hex to dec
@@ -88,7 +91,7 @@ def apply_texture(img, palette_hex):
 	if len(dict_colors) > len(palette):
 		img = reduce_color(img, len(palette))
     
-	img_out = nearest_neighbours_colors(img, palette)
+	img_out = nearest_neighbours_colors(img, palette, typeDistance)
 	return img_out
 	# plt.imshow(img_out)
 	# plt.show()

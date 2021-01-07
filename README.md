@@ -12,10 +12,19 @@ Pour installer une librairie :
 - Configuration standard : pip install nom_de_la_librairie
 - Anaconda : conda install nom_de_la_librairie
 
-Qt : PyQt5
-Scikit-image : skimage
-Scikit-learn : scikit-learn
-Pillow : Pillow
-Numpy : numpy
-Matplotlib : matplotlib
-OpenCV : opencv-python
+[Qt](https://www.qt.io/qt-for-python) : PyQt5\
+[Scikit-image](https://scikit-image.org) : skimage\
+[Scikit-learn](https://scikit-learn.org/stable) : scikit-learn\
+[Pillow](https://pillow.readthedocs.io/en/stable) : Pillow\
+[Numpy](https://numpy.org) : numpy\
+[Matplotlib](https://matplotlib.org) : matplotlib\
+[OpenCV](https://pypi.org/project/opencv-python) : opencv-python\
+[Pyxelate](https://github.com/sedthh/pyxelate) : +https://github.com/sedthh/pyxelate\
+
+
+## Exemples
+Image originale :
+[alt text](https://github.com/Justin-Code-hub/IN5X/tree/master/File/bridge.jpg)
+
+Réduction de taille d'un facteur 4 avec 10 couleurs.
+[alt text](https://github.com/Justin-Code-hub/IN5X/tree/master/File/bridge_dithering.png)

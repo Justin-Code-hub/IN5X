@@ -599,7 +599,7 @@ class Ui_MainWindow(object):
         axes[0].imshow(img)
         axes[1].imshow(img_shall)
         io.imsave("File/temp.png", img_shall)
-        self.statusbar.showMessage('Image Généré')
+        self.statusbar.showMessage('Image Générée')
 
     def PixelisationAbstractionResampler(self):
         img = io.imread(self.ImportImageName)

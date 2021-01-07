@@ -24,7 +24,7 @@ Pour installer une librairie :
 
 ## Exemples
 Image originale :
-![image](https://github.com/Justin-Code-hub/IN5X/tree/master/File/bridge.jpg =192x120)
+<img src="https://github.com/Justin-Code-hub/IN5X/tree/master/File/bridge.jpg" width="192" height="120">
 
 Réduction de taille d'un facteur 4 avec 10 couleurs.
-![image](https://github.com/Justin-Code-hub/IN5X/tree/master/File/bridge_dithering.png =160x100)
+<img src="https://github.com/Justin-Code-hub/IN5X/tree/master/File/bridge_dithering.png" width="160" height="100">

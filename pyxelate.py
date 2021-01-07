@@ -12,10 +12,6 @@ from skimage.transform import resize
 from sklearn.mixture import BayesianGaussianMixture
 from sklearn.exceptions import ConvergenceWarning
 
-from pyxelate import Pyxelate
-from skimage import io
-import matplotlib.pyplot as plt
-
 
 __version__ = '1.2.1'
 __version_info__ = tuple(int(num) for num in __version__.split('.'))
@@ -137,10 +133,7 @@ class Pyxelate:
 		image = resize(image[:, :, :3], (self.height * self.ITER * 2, self.width * self.ITER * 2), anti_aliasing=True)
 		# generate pixelated image with desired width / height
 		image = self._reduce(image)
-		
-		plt.imshow(image / 255.0)
-		plt.show()
-		eee
+
 
 		# apply palette
 		height, width, depth = image.shape
@@ -332,17 +325,3 @@ class Pyxelate:
 	def _is_transparent(image):
 		"""Returns True if there is an additional dimension for transparency"""
 		return bool(image.shape[2] == 4)
-
-img = io.imread("mario.jpg")
-height, width, _ = img.shape
-factor = 2
-colors = 10
-dither = True
-
-p = Pyxelate(height // factor, width // factor, colors, dither)
-img_shall = p.convert(img)
-
-_, axes = plt.subplots(1, 2, figsize=(16,16))
-axes[0].imshow(img)
-axes[1].imshow(img_shall)
-plt.show()

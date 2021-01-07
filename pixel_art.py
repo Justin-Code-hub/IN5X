@@ -174,7 +174,7 @@ class Ui_MainWindow(object):
         self.label_image_pixel.setObjectName("label_image_pixel")
         self.ImageLayout.addWidget(self.label_image_pixel)
         
-        print(self.label_image_pixel.size())
+        #print(self.label_image_pixel.size())
         #print(self.label_image_original.size())
 
 
@@ -435,9 +435,9 @@ class Ui_MainWindow(object):
     def openImage(self):
     	
         fname = QFileDialog.getOpenFileName()
-        print(fname)
+        #print(fname)
         self.ImportImageName = fname[0]
-        print(self.label_image_original.size())
+        #print(self.label_image_original.size())
         
         self.label_image_original.setPixmap(QtGui.QPixmap(fname[0]))
         self.label_image_original.setMinimumSize(1,1)
@@ -484,11 +484,11 @@ class Ui_MainWindow(object):
                 msgBox.setText("Il faut au moins une couleur")
                 msgBox.exec()
 
-        print(self.label_image_pixel.size())
+        #print(self.label_image_pixel.size())
         pixmap = QtGui.QPixmap("File/temp.png")
         self.label_image_pixel.setPixmap(pixmap)
         self.label_image_pixel.setMinimumSize(1,1)
-        self.label_image_pixel.setPixmap(pixmap.scaled(self.label_image_pixel.size(),QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
+        self.label_image_pixel.setPixmap(pixmap.scaled(self.label_image_pixel.size(),QtCore.Qt.KeepAspectRatio,QtCore.Qt.FastTransformation))
         #self.label_image_pixel.setScaledContents(True)
 
         self.pushButton_exporter.setEnabled(True)
@@ -590,8 +590,7 @@ class Ui_MainWindow(object):
             colors = len(self.color_list_as_string)
             
         
-        dither = True
-
+        dither = False
         p = Pyxelate(height // factor, width // factor, colors, dither)
 
         img_shall = p.convert(img)
@@ -612,7 +611,7 @@ class Ui_MainWindow(object):
 
             io.imsave("File/temp.png", sampler.output_lab)
         else :
-            print("ça marche pas")
+            #print("ça marche pas")
             msgBox = QMessageBox()
             msgBox.setIcon(QMessageBox.Critical)
             msgBox.setWindowTitle("Erreur 2020")
